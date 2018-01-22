@@ -23,22 +23,22 @@ gulp.task('styles', function () {
       .pipe(sourcemaps.init())
       .pipe(scss({outputStyle: 'compressed', includePaths: SASS_INCLUDE_PATHS}))
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest('./css'));
+      .pipe(gulp.dest('./dist'));
 });
 gulp.task('js', function() {
-  return gulp.src('./source-js/**/*.js')
+  return gulp.src('./scripts/**/*.js')
       .pipe(plumber({ errorHandler: handleError }))
       .pipe(sourcemaps.init())
       .pipe(babel({compact: true}))
       .pipe(concat('main.js'))
       .pipe(uglify())
       .pipe(sourcemaps.write())
-      .pipe(gulp.dest('./js'));
+      .pipe(gulp.dest('./dist'));
 });
 
 gulp.task('watch', ['styles', 'js'], function () {
   gulp.watch('./style/**/*.scss', ['styles']);
-  gulp.watch('./source-js/**/*.js', ['js']);
+  gulp.watch('./scripts/**/*.js', ['js']);
 });
 
 gulp.task('default', ['styles', 'js'], function () {
