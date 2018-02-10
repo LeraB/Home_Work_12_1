@@ -1,57 +1,95 @@
-var slideIndex = 0,
-    start = 0;
-showRightSlides();
+document.addEventListener('DOMContentLoaded', function () {
+    [].forEach.call(document.querySelectorAll('.slider .animate'), function (carousel) {
+        var lengthImgs = carousel.querySelectorAll('img').length,
+            lengthDot = carousel.querySelectorAll('img').length,
+            move = false,
+            leftPoint = null,
 
-function showLeftSlides(e) {
-    var i;
-    var slides = document.getElementsByClassName("mySlides");
-    var dots = document.getElementsByClassName("dot");
-    for (i = slides.length-1; i >=0; i--) {
-        slides[i].style.display = "none";
-    }
-    slideIndex++;
-    if (slideIndex > slides.length) {
-        slideIndex = 1
-    }
-    for (i = dots.length-1; i >=0; i--) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex + 1].style.display = "block";
-    dots[slideIndex + 1].className += " active";
-}
+            imgWidth = parseFloat(getComputedStyle(carousel.querySelector('img')).width),
+            maxLeft = (lengthImgs - 1) * imgWidth,
+            carouselLeftAbs, carouselLeftStart,
+            slide = 0;
 
-function showRightSlides(e) {
-    var i;
-    var slides = document.getElementsByClassName("mySlides");
-    var dots = document.getElementsByClassName("dot");
-    for (i = 0; i < slides.length; i++) {
-        slides[i].style.display = "none";
-    }
-    slideIndex++;
-    if (slideIndex > slides.length) {
-        slideIndex = 1
-    }
-    for (i = 0; i < dots.length; i++) {
-        dots[i].className = dots[i].className.replace(" active", "");
-    }
-    slides[slideIndex - 1].style.display = "block";
-    dots[slideIndex - 1].className += " active";
-}
+        carousel.addEventListener('dbclick', change, false);
+        carousel.addEventListener('mousedown', moveFunc, false);
+        carousel.addEventListener('mouseup', changeImg, false);
+        carousel.addEventListener('mousemove', moveMouse, false);
 
-document.getElementById("slideshow-container").addEventListener("click", function (e) {
-    if(event.clientX -event.offsetX > 0){
-    showRightSlides(e);}
-    else
-    {
-    if(event.clientX -event.offsetX < 0)  {
-        showLeftSlides(e);
-    }  
-    }
-});
+        carousel.addEventListener('touchstart', moveFunc, false);
+        carousel.addEventListener('touchend', changeImg, false);
+        carousel.addEventListener('touchmove', moveMouse, false);
 
-document.getElementById("dots-wraper").addEventListener("click", function (e) {
-    showRightSlides(e);
-});
-document.getElementById("dots-wraper").addEventListener("click", function (e) {
-    showRightSlides(e);
-});
+        function moveFunc() {
+            move = true;
+            carouselLeftStart = Math.abs(parseFloat(getComputedStyle(carousel).left));
+        };
+
+
+        function change() {
+
+            carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
+
+            console.log("carouselLeftAbs = ", carouselLeftAbs)
+            console.log("carouselLeftStart = ", carouselLeftStart)
+            console.log("imgWidth = ", imgWidth)
+
+            if (carouselLeftStart + imgWidth / 4 < carouselLeftAbs) {
+                slide++;
+            }
+            if (carouselLeftAbs >= maxLeft) {
+                slide = 0;
+            }
+
+            if (carouselLeftAbs <= 0) {
+                slide = lengthImgs;
+            }
+
+        }
+
+        function changeImg() {
+            carouselLeftAbs = Math.abs(parseFloat(getComputedStyle(carousel).left));
+
+            console.log("carouselLeftAbs = ", carouselLeftAbs)
+            console.log("carouselLeftStart = ", carouselLeftStart)
+            console.log("imgWidth = ", imgWidth)
+
+            if (carouselLeftStart + imgWidth / 4 < carouselLeftAbs) {
+                slide++;
+            }
+
+            if (carouselLeftAbs >= maxLeft) {
+                slide = 0
+            }
+
+            if (carouselLeftAbs <= 0) {
+                slide = 4
+            }
+
+            carousel.style.left = -slide * imgWidth + 'px';
+            move = false;
+            leftPoint = null;
+        };
+
+        function moveMouse(event) {
+            if (move) {
+                if (leftPoint) {
+                    var left = parseInt(carousel.style.left) + (event.clientX - leftPoint) * 2;
+                    if (left > 0) {
+                        left = 0;
+                    } else if (Math.abs(left) > maxLeft) {
+                        left = Math.abs(left) - maxLeft;
+                    }
+                    carousel.style.left = left + 'px';
+                }
+                ;
+                leftPoint = event.clientX;
+            }
+            ;
+        };
+    });
+
+    document.addEventListener('mousemove', function (event) {
+        event.preventDefault();
+    }, false);
+
+}, false);
