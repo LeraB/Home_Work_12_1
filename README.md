@@ -20,7 +20,14 @@
     </div>
 ```
 
-##### Demo
+## Demo
 
  To view go to link: https://lerab.github.io/Home_Work_12_1/
 
+## Installation:
+
+To download the packages use: npm i or npm install
+
+To start project use: npm start
+
+To building aplication: npm run build
