@@ -27,5 +27,7 @@
 ##### Installation:
 
 To download the packages use: npm i or npm install
+
 To start project use: npm start
+
 To building aplication: npm run build
